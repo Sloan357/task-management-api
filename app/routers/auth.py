@@ -7,7 +7,7 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, Token
 from app.utils.auth import verify_password, get_password_hash, create_access_token
 
-router = APIRouter(prefix="/api/auth", tags=["Authentication"])
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
@@ -84,6 +84,6 @@ def login(
         )
 
     # Create access token
-    access_token = create_access_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
 
     return {"access_token": access_token, "token_type": "bearer"}

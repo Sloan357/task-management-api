@@ -27,10 +27,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(auth.router)
-app.include_router(tasks.router)
-app.include_router(projects.router)
+# Include routers with /api prefix
+app.include_router(auth.router, prefix="/api")
+app.include_router(tasks.router, prefix="/api")
+app.include_router(projects.router, prefix="/api")
 
 
 @app.get("/", tags=["Root"])

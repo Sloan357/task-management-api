@@ -10,7 +10,7 @@ from app.schemas.project import ProjectCreate, ProjectUpdate, ProjectResponse
 from app.schemas.task import TaskResponse
 from app.dependencies import get_current_user
 
-router = APIRouter(prefix="/api/projects", tags=["Projects"])
+router = APIRouter(prefix="/projects", tags=["Projects"])
 
 
 @router.post("", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)

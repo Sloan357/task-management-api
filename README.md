@@ -1,6 +1,6 @@
 # Task Management REST API
 
-A production-ready REST API for task and project management built with FastAPI, PostgreSQL, and JWT authentication.
+A production-ready REST API for task and project management built with FastAPI, PostgreSQL, and JWT authentication. Includes a React-based GUI for easy testing and interaction.
 
 ## Features
 
@@ -10,23 +10,31 @@ A production-ready REST API for task and project management built with FastAPI, 
 - **Advanced Filtering**: Filter tasks by status, priority, project, tags, due date, and search
 - **RESTful Design**: Clean, intuitive API endpoints
 - **Auto-generated Documentation**: Interactive Swagger UI and ReDoc
+- **React GUI**: Modern web interface for testing and using the API
 
 ## Tech Stack
 
+### Backend
 - **Framework**: FastAPI
 - **Database**: PostgreSQL
 - **ORM**: SQLAlchemy
 - **Validation**: Pydantic
 - **Authentication**: JWT (JSON Web Tokens)
-- **Password Hashing**: Bcrypt
+- **Password Hashing**: Bcrypt (v4.3.0 for compatibility)
 - **Migrations**: Alembic
 - **ASGI Server**: Uvicorn
+
+### Frontend (GUI)
+- **Framework**: React 18
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **HTTP Client**: Axios
 
 ## Project Structure
 
 ```
 task-management-api/
-├── app/
+├── app/                     # Backend API
 │   ├── __init__.py
 │   ├── main.py              # FastAPI application entry point
 │   ├── config.py            # Configuration and settings
@@ -50,6 +58,22 @@ task-management-api/
 │   └── utils/               # Utility functions
 │       ├── __init__.py
 │       └── auth.py          # JWT and password utilities
+├── task-management-gui/     # React Frontend
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   │   ├── Auth.jsx
+│   │   │   ├── Tasks.jsx
+│   │   │   ├── TaskForm.jsx
+│   │   │   ├── TaskList.jsx
+│   │   │   ├── Projects.jsx
+│   │   │   └── ProjectForm.jsx
+│   │   ├── services/
+│   │   │   └── api.js       # API service layer
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── vite.config.js       # Vite configuration
+│   ├── package.json
+│   └── tailwind.config.js
 ├── alembic/                 # Database migrations
 │   ├── versions/
 │   └── env.py
@@ -122,7 +146,7 @@ DEBUG=False
 alembic upgrade head
 ```
 
-### 7. Start the Server
+### 7. Start the Backend Server
 
 ```bash
 uvicorn app.main:app --reload
@@ -130,12 +154,25 @@ uvicorn app.main:app --reload
 
 The API will be available at `http://localhost:8000`
 
+### 8. Start the Frontend GUI (Optional)
+
+In a new terminal:
+
+```bash
+cd task-management-gui
+npm install
+npm run dev
+```
+
+The GUI will be available at `http://localhost:3000`
+
 ## API Documentation
 
-Once the server is running, visit:
+Once the server is running, you can access:
 
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+- **React GUI**: http://localhost:3000 (interactive web interface)
+- **Swagger UI**: http://localhost:8000/docs (API documentation)
+- **ReDoc**: http://localhost:8000/redoc (alternative API docs)
 
 ## API Endpoints
 
@@ -313,12 +350,14 @@ DELETE /api/projects/{project_id}
 
 ## Security
 
-- Passwords are hashed using bcrypt
+- Passwords are hashed using bcrypt (v4.3.0 for passlib compatibility)
 - JWT tokens expire after 30 minutes (configurable)
+- JWT subject claims use string format for compliance
 - All task and project endpoints require authentication
 - Users can only access their own data
 - SQL injection protection via SQLAlchemy ORM
 - Input validation via Pydantic schemas
+- CORS configured for local development (customize for production)
 
 ## Error Handling
 
@@ -372,17 +411,25 @@ alembic downgrade -1
 
 1. Set `DEBUG=False` in environment variables
 2. Use a production-grade ASGI server (e.g., Gunicorn with Uvicorn workers)
-3. Set up proper CORS configuration
+3. Set up proper CORS configuration (update `allow_origins` in `app/main.py`)
 4. Use environment-specific secrets
 5. Enable HTTPS
 6. Set up database connection pooling
 7. Configure logging and monitoring
+8. Build the React GUI for production: `cd task-management-gui && npm run build`
 
 Example production command:
 
 ```bash
 gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
+
+### Known Issues & Fixes
+
+- **bcrypt compatibility**: Use bcrypt version 4.3.0 instead of 5.x for compatibility with passlib
+- **JWT tokens**: Subject claims must be strings, not integers
+- **Enum values**: SQLAlchemy enum columns configured to use enum values (lowercase) instead of names
+- **Frontend proxy**: GUI uses Vite proxy to avoid CORS issues in development
 
 ## Environment Variables
 

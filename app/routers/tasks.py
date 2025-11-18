@@ -10,7 +10,7 @@ from app.models.task import Task, TaskStatus, TaskPriority
 from app.schemas.task import TaskCreate, TaskUpdate, TaskResponse
 from app.dependencies import get_current_user
 
-router = APIRouter(prefix="/api/tasks", tags=["Tasks"])
+router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 
 @router.post("", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
